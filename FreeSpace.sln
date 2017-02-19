@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeSpace", "FreeSpace.csproj", "{74A6733A-6725-6697-8DEF-1DEA7B67926D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FreeSpace.Editor", "FreeSpace.Editor.csproj", "{279A2F42-4CCE-AFDC-E4A8-4C8459432824}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{74A6733A-6725-6697-8DEF-1DEA7B67926D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74A6733A-6725-6697-8DEF-1DEA7B67926D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74A6733A-6725-6697-8DEF-1DEA7B67926D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74A6733A-6725-6697-8DEF-1DEA7B67926D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{279A2F42-4CCE-AFDC-E4A8-4C8459432824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{279A2F42-4CCE-AFDC-E4A8-4C8459432824}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{279A2F42-4CCE-AFDC-E4A8-4C8459432824}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{279A2F42-4CCE-AFDC-E4A8-4C8459432824}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

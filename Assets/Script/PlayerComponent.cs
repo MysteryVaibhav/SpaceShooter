@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.Networking;
 
 [System.Serializable]
 public class Boundary {
 	public float xMin, xMax, zMin, zMax;
 }
 
-public class PlayerComponent : MonoBehaviour {
+public class PlayerComponent : NetworkBehaviour {
 
 	private Rigidbody rb;
 	public float speed;
@@ -29,6 +30,11 @@ public class PlayerComponent : MonoBehaviour {
 	}
 
 	void Update() {
+    
+        //if (!isLocalPlayer) {
+        //    return;
+        //}
+        
 		if (areaButton.CanFire () && Time.time > nextFire) {
 			nextFire = Time.time + fireRate;
 			Instantiate (shot, shotSpawn.position, shotSpawn.rotation);
@@ -37,6 +43,10 @@ public class PlayerComponent : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
+    
+        //if (!isLocalPlayer) {
+        //    return;
+        //}
 		//float moveHorizontal = Input.GetAxis ("Horizontal");
 		//float moveVertical = Input.GetAxis ("Vertical");
 		Vector2 direction = touchPad.GetDirection ();
@@ -57,7 +67,7 @@ public class PlayerComponent : MonoBehaviour {
     }
     
     public void increaseFireRate(float val) {
-        fireRate *= val;
+        fireRate -= val;
     }
     
     public void setFireRate(float val) {

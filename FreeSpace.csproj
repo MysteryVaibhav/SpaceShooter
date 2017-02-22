@@ -79,6 +79,7 @@
     <Compile Include="Assets\Script\DestroyByContact.cs" />
     <Compile Include="Assets\Script\DestroyByTime.cs" />
     <Compile Include="Assets\Script\GameController.cs" />
+    <Compile Include="Assets\Script\MoveHorizontal.cs" />
     <Compile Include="Assets\Script\Mover.cs" />
     <Compile Include="Assets\Script\PlayerComponent.cs" />
     <Compile Include="Assets\Script\RandomRotator.cs" />

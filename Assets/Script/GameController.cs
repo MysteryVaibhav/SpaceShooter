@@ -29,6 +29,10 @@ public class GameController : MonoBehaviour {
 	private int score;
 	private int prevScore;
 	private bool isPaused;
+    private bool isRightHand;
+    private bool isSwitched;
+    private static int playerSide;  //0 means right handed, 1 means left handed
+    private bool everLeft;
     
     //Menu Canvas
     public GameObject startButton;
@@ -42,6 +46,7 @@ public class GameController : MonoBehaviour {
     public GameObject settingBackButton;
 	public Scrollbar scrollBar;
     public GameObject settingsCanvas;
+    public GameObject switchButton;
     
     //Player Canvas
 	public GameObject restartButton;
@@ -50,6 +55,9 @@ public class GameController : MonoBehaviour {
     public GameObject levelUpText;
     public GameObject displayHighText;
     public GameObject playerCanvas;
+    public GameObject movementZone;
+    public GameObject fireZone;
+    public GameObject playInfo;
 	
     //Help Canvas
 	public GameObject backButton;
@@ -82,6 +90,15 @@ public class GameController : MonoBehaviour {
 		gameOver = false;
 		restart = false;
 		isPaused = false;
+        isRightHand = true;
+        isSwitched = false;
+        playerSide = PlayerPrefs.GetInt ("playerSide");
+        if (playerSide == 1) {
+            movementZone.GetComponent<RectTransform>().localPosition += new Vector3(79.01f, 0, 0);
+            fireZone.GetComponent<RectTransform>().localPosition -= new Vector3(180,0,0);
+            isSwitched = true;
+            isRightHand = false;
+        }
 		highscore = PlayerPrefs.GetInt ("highscore");
 		highestLevel = PlayerPrefs.GetInt ("highLevel");
 		playerSpeed = PlayerPrefs.GetFloat("playerSpeed");
@@ -127,9 +144,9 @@ public class GameController : MonoBehaviour {
         if (level > highestLevel) {
             PlayerPrefs.SetInt ("highLevel", level);
         }
-        hazard.GetComponent<DestroyByContact>().setScoreValue(10);
-        hazard.GetComponent<Mover>().setSpeed(-5);
-        hazard.GetComponent<RandomRotator>().setTumble(5);
+        //hazard.GetComponent<DestroyByContact>().setScoreValue(10);
+        //hazard.GetComponent<Mover>().setSpeed(-5);
+        //hazard.GetComponent<RandomRotator>().setTumble(5);
         restartButton.SetActive (true);
         restart = true;
     }
@@ -141,6 +158,7 @@ public class GameController : MonoBehaviour {
 			Time.timeScale = 1;
 			menuCanvas.SetActive(false);
 			player.SetActive(true);
+            playerCanvas.SetActive(true);
 		} else {
 			levelCanvas.SetActive(false);
 			restartButton.SetActive (false);
@@ -262,7 +280,9 @@ public class GameController : MonoBehaviour {
 				break;
 			}
 		}
-        startLevel2();
+        if (!gameOver) {
+            startLevel2();
+        }
 	}
 	
 	//************* Code for Level 2 Gameplay *************//
@@ -326,7 +346,9 @@ public class GameController : MonoBehaviour {
 				break;
 			}
 		}
-        StartCoroutine (SpawnHorizontalWaves1 ());
+        if (!gameOver) {
+            StartCoroutine (SpawnHorizontalWaves1 ());
+        }
 	}
 	
 	IEnumerator SpawnHorizontalWaves1 ()
@@ -357,8 +379,9 @@ public class GameController : MonoBehaviour {
             hazard.GetComponent<RandomRotator>().setTumble(5);
             restartButton.SetActive (true);
             restart = true;
+        } else {
+            startLevel3();
         }
-        startLevel3();
 	}
 	
 	public void startLevel3() {
@@ -424,37 +447,110 @@ public class GameController : MonoBehaviour {
 		startGame();
 	}
 	
-	
+	//Help screen functions
 	
 	public void helpScreen() {
 		menuCanvas.SetActive(false);
 		helpCanvas.SetActive(true);
-		//player.SetActive(true);
+        playerCanvas.SetActive(true);
+		if (!isPaused) {
+            player.SetActive(true);
+        }
+        movementZone.SetActive(true);
+        fireZone.SetActive(true);
+        playInfo.SetActive(false);
+        pauseButton.SetActive(false);
+        var color = Color.grey;
+        color.a = 0.1f;
+        movementZone.GetComponent<Image>().color = color;
+        color = Color.red;
+        color.a = 0.1f;
+        fireZone.GetComponent<Image>().color = color;
+        if (isSwitched) {
+            if (isRightHand) {
+                if (everLeft) {
+                    GameObject.Find("Fire Zone Text").GetComponent<RectTransform>().localPosition += new Vector3(110,0,0);
+                    GameObject.Find("Movement Zone Text").GetComponent<RectTransform>().localPosition -= new Vector3(55,0,0);
+                }
+            } else {
+                GameObject.Find("Fire Zone Text").GetComponent<RectTransform>().localPosition -= new Vector3(110,0,0);
+                GameObject.Find("Movement Zone Text").GetComponent<RectTransform>().localPosition += new Vector3(55,0,0);
+                everLeft = true;
+            }
+        }
 	}
+    
+    public void backToMenu() {
+		helpCanvas.SetActive(false);
+		player.SetActive(false);
+		menuCanvas.SetActive(true);
+        var color = Color.grey;
+        color.a = 0;
+        movementZone.GetComponent<Image>().color = color;
+        color = Color.red;
+        color.a = 0;
+        fireZone.GetComponent<Image>().color = color;
+        playInfo.SetActive(true);
+        pauseButton.SetActive(true);
+        playerCanvas.SetActive(false);
+	}
+    
+    //Setting screen functions
 	
 	public void settingsScreen() {
 		menuCanvas.SetActive(false);
 		settingsCanvas.SetActive(true);
 		playerSpeed = PlayerPrefs.GetFloat("playerSpeed");
 		if (playerSpeed == 0) playerSpeed = 7;
-		settingsCanvas.GetComponent<Scrollbar>().value = playerSpeed/20;
-		player.SetActive(true);
+		scrollBar.value = playerSpeed/20;
+		playerCanvas.SetActive(true);
+        if (!isPaused) {
+            player.SetActive(true);
+        }
+        movementZone.SetActive(true);
+        fireZone.SetActive(true);
+        pauseButton.SetActive(false);
+        playInfo.SetActive(false);
+        var color = Color.grey;
+        color.a = 0.1f;
+        movementZone.GetComponent<Image>().color = color;
+        color = Color.red;
+        color.a = 0.1f;
+        fireZone.GetComponent<Image>().color = color;
 	}
 	
 	public void backToMenuFromSettings() {
 		settingsCanvas.SetActive(false);
 		player.SetActive(false);
 		menuCanvas.SetActive(true);
+        var color = Color.grey;
+        color.a = 0;
+        movementZone.GetComponent<Image>().color = color;
+        color = Color.red;
+        color.a = 0;
+        fireZone.GetComponent<Image>().color = color;
+        pauseButton.SetActive(true);
+        playInfo.SetActive(true);
+        playerCanvas.SetActive(false);
 	}
+    
+    public void switchSide() {
+        isSwitched = true;
+        if (isRightHand) {
+            movementZone.GetComponent<RectTransform>().localPosition += new Vector3(79.01f, 0, 0);
+            fireZone.GetComponent<RectTransform>().localPosition -= new Vector3(180,0,0);
+            isRightHand = false;
+            PlayerPrefs.SetInt ("playerSide",1);
+        } else {
+            movementZone.GetComponent<RectTransform>().localPosition -= new Vector3(79.01f, 0, 0);
+            fireZone.GetComponent<RectTransform>().localPosition += new Vector3(180,0,0);
+            isRightHand = true;
+            PlayerPrefs.SetInt ("playerSide",0);
+        }
+    }
 	
 	public void backToMenuFromLevels() {
 		levelCanvas.SetActive(false);
-		menuCanvas.SetActive(true);
-	}
-	
-	public void backToMenu() {
-		helpCanvas.SetActive(false);
-		player.SetActive(false);
 		menuCanvas.SetActive(true);
 	}
 	

@@ -12,4 +12,9 @@ public class MoveHorizontal : MonoBehaviour {
 		rb = GetComponent<Rigidbody>();
 		rb.velocity = new Vector3 (xSpeed, 0.0f, zSpeed);
 	}
+    
+    public void setSpeed(float x, float z) {
+        xSpeed = x;
+        zSpeed = z;
+    }
 }

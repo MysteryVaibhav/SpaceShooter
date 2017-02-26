@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
-    //GameObjects : player,hazard
+	//GameObjects : player,hazard
 	public GameObject hazard;
 	public GameObject hazardRight;
-    public GameObject player;
-    
-    //Counts and coordinates
+	public GameObject player;
+	
+	//Counts and coordinates
 	public Vector3 spawnValues;
 	public int hazardCount;
 	public int rightHazardCount;
@@ -19,67 +19,68 @@ public class GameController : MonoBehaviour {
 	public float spawnWait;
 	public float startWait;
 	public float waveWait;
-    public float horizontalWaveWait;
+	public float horizontalWaveWait;
 	private static float playerSpeed;
 	private int level = 1;
 	
-    //State variables
-    private bool gameOver;
+	//State variables
+	private bool gameOver;
 	private bool restart;
 	private int score;
 	private int prevScore;
 	private bool isPaused;
-    private bool isRightHand;
-    private bool isSwitched;
-    private static int playerSide;  //0 means right handed, 1 means left handed
-    private bool everLeft;
-    
-    //Menu Canvas
-    public GameObject startButton;
-	public GameObject helpButton;
-    public GameObject settingsButton;
-    public GameObject exitButton;
-    public GameObject menuCanvas;
-    public Text highScoreText;
-    
-    //Settings Canvas
-    public GameObject settingBackButton;
-	public Scrollbar scrollBar;
-    public GameObject settingsCanvas;
-    public GameObject switchButton;
-    
-    //Player Canvas
-	public GameObject restartButton;
-    public Text scoreText;
-	public Text gameOverText;
-    public GameObject levelUpText;
-    public GameObject displayHighText;
-    public GameObject playerCanvas;
-    public GameObject movementZone;
-    public GameObject fireZone;
-    public GameObject playInfo;
+	private bool isRightHand;
+	private bool isSwitched;
+	private static int playerSide;  //0 means right handed, 1 means left handed
+	private bool everLeft;
+	private bool levelJump;
 	
-    //Help Canvas
+	//Menu Canvas
+	public GameObject startButton;
+	public GameObject helpButton;
+	public GameObject settingsButton;
+	public GameObject exitButton;
+	public GameObject menuCanvas;
+	public Text highScoreText;
+	
+	//Settings Canvas
+	public GameObject settingBackButton;
+	public Scrollbar scrollBar;
+	public GameObject settingsCanvas;
+	public GameObject switchButton;
+	
+	//Player Canvas
+	public GameObject restartButton;
+	public Text scoreText;
+	public Text gameOverText;
+	public GameObject levelUpText;
+	public GameObject displayHighText;
+	public GameObject playerCanvas;
+	public GameObject movementZone;
+	public GameObject fireZone;
+	public GameObject playInfo;
+	
+	//Help Canvas
 	public GameObject backButton;
 	public GameObject pauseButton;
-    public GameObject helpCanvas;
-    public Text fireZoneIndicatorText;
+	public GameObject helpCanvas;
+	public Text fireZoneIndicatorText;
 	public Text movementZoneIndicatorText;
 	
 	//Level Canvas
 	public GameObject levelBackButton;
-    public GameObject levelCanvas;
-    
-    //Level Thresholds
-    private static int level_1_2 = 250;
-    private static int level_2_3 = 300;
-    private static int level_3_4 = 20;
-    private static int level_4_5 = 20;
-    private static int level_5_6 = 20;
-    private static int level_6_7 = 20;
-    private static int level_7_8 = 20;
-    private static int level_8_9 = 20;
-    
+	public GameObject levelCanvas;
+	
+	//Level Thresholds
+	private static int level_1_2 = 250;
+	private static int level_2_3 = 350;
+	private static int level_3_4 = 500;
+	private static int level_4_5 = 700;
+	private static int level_5_6 = 900;
+	private static int level_6_7 = 1200;
+	private static int level_7_8 = 1500;
+	private static int level_8_9 = 2000;
+	
 
 	void Start ()
 	{
@@ -90,15 +91,16 @@ public class GameController : MonoBehaviour {
 		gameOver = false;
 		restart = false;
 		isPaused = false;
-        isRightHand = true;
-        isSwitched = false;
-        playerSide = PlayerPrefs.GetInt ("playerSide");
-        if (playerSide == 1) {
-            movementZone.GetComponent<RectTransform>().localPosition += new Vector3(79.01f, 0, 0);
-            fireZone.GetComponent<RectTransform>().localPosition -= new Vector3(180,0,0);
-            isSwitched = true;
-            isRightHand = false;
-        }
+		isRightHand = true;
+		isSwitched = false;
+		levelJump = false;
+		playerSide = PlayerPrefs.GetInt ("playerSide");
+		if (playerSide == 1) {
+			movementZone.GetComponent<RectTransform>().localPosition += new Vector3(79.01f, 0, 0);
+			fireZone.GetComponent<RectTransform>().localPosition -= new Vector3(180,0,0);
+			isSwitched = true;
+			isRightHand = false;
+		}
 		highscore = PlayerPrefs.GetInt ("highscore");
 		highestLevel = PlayerPrefs.GetInt ("highLevel");
 		playerSpeed = PlayerPrefs.GetFloat("playerSpeed");
@@ -135,30 +137,27 @@ public class GameController : MonoBehaviour {
 			levelCanvas.SetActive(true);
 		}
 	}
-    
-    void gameOverAction() {
-        if (score > highscore) {
-            displayHighText.SetActive(true);
-            PlayerPrefs.SetInt ("highscore", score);
-        }
-        if (level > highestLevel) {
-            PlayerPrefs.SetInt ("highLevel", level);
-        }
-        //hazard.GetComponent<DestroyByContact>().setScoreValue(10);
-        //hazard.GetComponent<Mover>().setSpeed(-5);
-        //hazard.GetComponent<RandomRotator>().setTumble(5);
-        restartButton.SetActive (true);
-        restart = true;
-    }
-    
-    //************* Common gameplay functions **************//
-    
-    public void startGame() {
+	
+	void gameOverAction() {
+		if (score > highscore) {
+			displayHighText.SetActive(true);
+			PlayerPrefs.SetInt ("highscore", score);
+		}
+		if (level > highestLevel) {
+			PlayerPrefs.SetInt ("highLevel", level);
+		}
+		restartButton.SetActive (true);
+		restart = true;
+	}
+	
+	//************* Common gameplay functions **************//
+	
+	public void startGame() {
 		if (isPaused) {
 			Time.timeScale = 1;
 			menuCanvas.SetActive(false);
 			player.SetActive(true);
-            playerCanvas.SetActive(true);
+			playerCanvas.SetActive(true);
 		} else {
 			levelCanvas.SetActive(false);
 			restartButton.SetActive (false);
@@ -171,18 +170,18 @@ public class GameController : MonoBehaviour {
 			StartCoroutine (SpawnWaves ());
 		}
 	}
-    
+	
 	IEnumerator SpawnWaves ()
 	{
+		gameOverText.text = "Level " + level.ToString();
 		yield return new WaitForSeconds (startWait);
-        gameOverText.text = "Level " + level.ToString();
-        yield return new WaitForSeconds (startWait);
 		while (true)
 		{
-            gameOverText.text = "";
+			gameOverText.text = "";
 			levelUpText.SetActive(false);
 			for (int i = 0; i < hazardCount; i++)
 			{
+				if (gameOver) break;
 				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
 				Quaternion spawnRotation = Quaternion.identity;
 				Instantiate (hazard, spawnPosition, spawnRotation);
@@ -198,7 +197,7 @@ public class GameController : MonoBehaviour {
 				levelUpText.SetActive(true);
 				level++;
 			}
-			yield return new WaitForSeconds (waveWait);
+			//yield return new WaitForSeconds (waveWait);
 
 			if (gameOver)
 			{
@@ -219,19 +218,21 @@ public class GameController : MonoBehaviour {
 			}
 		}
 	}
-    
-    //************* Code for Level 1 Gameplay *************//
+	
+	//************* Code for Level 1 Gameplay *************//
 
 	public void startLevel1() {
 		level = 1;
 		player.GetComponent<PlayerComponent>().setFireRate(0.25f);
-		hazard.GetComponent<DestroyByContact>().setScoreValue(10);
-		hazard.GetComponent<Mover>().setSpeed(-5);
-		hazard.GetComponent<RandomRotator>().setTumble(5);
+		if (!levelJump) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(10);
+					hazard.GetComponent<Mover>().setSpeed(-5);
+					hazard.GetComponent<RandomRotator>().setTumble(5);
+				}
 		startGame1();
 	}
-    
-    public void startGame1() {
+	
+	public void startGame1() {
 		if (isPaused) {
 			Time.timeScale = 1;
 			menuCanvas.SetActive(false);
@@ -248,31 +249,38 @@ public class GameController : MonoBehaviour {
 			StartCoroutine (SpawnWaves1 ());
 		}
 	}
-    
-    IEnumerator SpawnWaves1 ()
+	
+	IEnumerator SpawnWaves1 ()
 	{
+		gameOverText.text = "Level 1";
 		yield return new WaitForSeconds (startWait);
-        gameOverText.text = "Level 1";
-        yield return new WaitForSeconds (startWait);
 		while (true)
 		{
-            gameOverText.text = "";
+			gameOverText.text = "";
 			levelUpText.SetActive(false);
 			for (int i = 0; i < hazardCount; i++)
 			{
+				if (gameOver) break;
 				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
 				Quaternion spawnRotation = Quaternion.identity;
 				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(10);
+					hazard.GetComponent<Mover>().setSpeed(-5);
+					hazard.GetComponent<RandomRotator>().setTumble(5);
+				}
 				yield return new WaitForSeconds (spawnWait);
 			}
 			// Level up logic
 			if (score - prevScore >= level_1_2 && !gameOver) {
 				prevScore = score;
 				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Nice work !!";
 				level++;
-                break;
+				levelJump = true;
+				break;
 			}
-			yield return new WaitForSeconds (waveWait);
+			//yield return new WaitForSeconds (waveWait);
 
 			if (gameOver)
 			{
@@ -280,9 +288,9 @@ public class GameController : MonoBehaviour {
 				break;
 			}
 		}
-        if (!gameOver) {
-            startLevel2();
-        }
+		if (!gameOver) {
+			startLevel2();
+		}
 	}
 	
 	//************* Code for Level 2 Gameplay *************//
@@ -290,13 +298,15 @@ public class GameController : MonoBehaviour {
 	public void startLevel2() {
 		level = 2;
 		player.GetComponent<PlayerComponent>().setFireRate(0.22f);
-		hazard.GetComponent<DestroyByContact>().setScoreValue(15);
-		hazard.GetComponent<Mover>().setSpeed(-8);
-		hazard.GetComponent<RandomRotator>().setTumble(8);
+		if (!levelJump) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(15);
+					hazard.GetComponent<Mover>().setSpeed(-8);
+					hazard.GetComponent<RandomRotator>().setTumble(8);
+				}
 		startGame2();
 	}
-    
-    public void startGame2() {
+	
+	public void startGame2() {
 		if (isPaused) {
 			Time.timeScale = 1;
 			menuCanvas.SetActive(false);
@@ -313,32 +323,41 @@ public class GameController : MonoBehaviour {
 			StartCoroutine (SpawnWaves2 ());
 		}
 	}
-    
-    IEnumerator SpawnWaves2 ()
+	
+	IEnumerator SpawnWaves2 ()
 	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 2";
 		yield return new WaitForSeconds (startWait);
-        gameOverText.text = "Level 2";
-        yield return new WaitForSeconds (startWait);
 		while (true)
 		{
-            gameOverText.text = "";
+			gameOverText.text = "";
 			levelUpText.SetActive(false);
 			for (int i = 0; i < hazardCount; i++)
 			{
+				if (gameOver) break;
 				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
 				Quaternion spawnRotation = Quaternion.identity;
 				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(15);
+					hazard.GetComponent<Mover>().setSpeed(-8);
+					hazard.GetComponent<RandomRotator>().setTumble(8);
+				}
 				yield return new WaitForSeconds (spawnWait);
 			}
 			// Level up logic
 			if (score - prevScore >= level_2_3 && !gameOver) {
 				prevScore = score;
 				levelUpText.SetActive(true);
-                levelUpText.GetComponent<Text>().text = "Watch out for the waves ;)";
+				levelUpText.GetComponent<Text>().text = "Watch out for the waves ;)";
 				level++;
-                break;
+				levelJump = true;
+				break;
 			}
-			yield return new WaitForSeconds (waveWait);
+			//yield return new WaitForSeconds (waveWait);
 
 			if (gameOver)
 			{
@@ -346,97 +365,545 @@ public class GameController : MonoBehaviour {
 				break;
 			}
 		}
-        if (!gameOver) {
-            StartCoroutine (SpawnHorizontalWaves1 ());
-        }
+		if (!gameOver) {
+			StartCoroutine (SpawnHorizontalWaves1 ());
+		}
 	}
 	
 	IEnumerator SpawnHorizontalWaves1 ()
 	{
-        yield return new WaitForSeconds (horizontalWaveWait);
-        levelUpText.GetComponent<Text>().text = "Nice work, Level Up !!!!!!";
-        levelUpText.SetActive(false);
-        for (int i = 0; i < rightHazardCount; i++)
-        {
-            Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (2, 16));
-            Quaternion spawnRotation = Quaternion.identity;
-            Instantiate (hazardRight, spawnPosition, spawnRotation);
-            yield return new WaitForSeconds (spawnWait);
-        }
+		yield return new WaitForSeconds (horizontalWaveWait);
+		levelUpText.SetActive(false);
+		for (int i = 0; i < rightHazardCount; i++)
+		{
+			if (gameOver) break;
+			Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (2, 16));
+			Quaternion spawnRotation = Quaternion.identity;
+			Instantiate (hazardRight, spawnPosition, spawnRotation);
+			if (i == 0) {
+				hazardRight.GetComponent<MoveHorizontal>().setSpeed(-5,-2);
+			}
+			yield return new WaitForSeconds (spawnWait);
+		}
 
-        if (gameOver)
-        {
-            //restartText.text = "Press 'R' for Restart";
-            if (score > highscore) {
-                displayHighText.SetActive(true);
-                PlayerPrefs.SetInt ("highscore", score);
-            }
-            if (level > highestLevel) {
-                PlayerPrefs.SetInt ("highLevel", level);
-            }
-            hazard.GetComponent<DestroyByContact>().setScoreValue(10);
-            hazard.GetComponent<Mover>().setSpeed(-5);
-            hazard.GetComponent<RandomRotator>().setTumble(5);
-            restartButton.SetActive (true);
-            restart = true;
-        } else {
-            startLevel3();
-        }
+		if (gameOver)
+		{
+			//restartText.text = "Press 'R' for Restart";
+			if (score > highscore) {
+				displayHighText.SetActive(true);
+				PlayerPrefs.SetInt ("highscore", score);
+			}
+			if (level > highestLevel) {
+				PlayerPrefs.SetInt ("highLevel", level);
+			}
+			restartButton.SetActive (true);
+			restart = true;
+		} else {
+			levelUpText.SetActive(true);
+			levelUpText.GetComponent<Text>().text = "You have got skills.";
+			startLevel3();
+		}
 	}
+	
+	//************* Code for Level 3 Gameplay *************//
 	
 	public void startLevel3() {
 		level = 3;
 		player.GetComponent<PlayerComponent>().setFireRate(0.19f);
-		hazard.GetComponent<DestroyByContact>().setScoreValue(20);
-		hazard.GetComponent<Mover>().setSpeed(-11);
-		hazard.GetComponent<RandomRotator>().setTumble(11);
-		startGame();
+		if (!levelJump) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(20);
+					hazard.GetComponent<Mover>().setSpeed(-11);
+					hazard.GetComponent<RandomRotator>().setTumble(11);
+				}
+		startGame3();
 	}
+	
+	public void startGame3() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves3 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves3 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 3";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(20);
+					hazard.GetComponent<Mover>().setSpeed(-11);
+					hazard.GetComponent<RandomRotator>().setTumble(11);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_3_4 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Going Strong !!";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel4();
+		}
+	}
+	
+	//************* Code for Level 4 Gameplay *************//
 	
 	public void startLevel4() {
 		level = 4;
 		player.GetComponent<PlayerComponent>().setFireRate(0.16f);
-		hazard.GetComponent<DestroyByContact>().setScoreValue(25);
-		hazard.GetComponent<Mover>().setSpeed(-14);
-		hazard.GetComponent<RandomRotator>().setTumble(14);
-		startGame();
+		if (!levelJump) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(25);
+					hazard.GetComponent<Mover>().setSpeed(-14);
+					hazard.GetComponent<RandomRotator>().setTumble(14);
+				}
+		startGame4();
 	}
+	
+	public void startGame4() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves4 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves4 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 4";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(25);
+					hazard.GetComponent<Mover>().setSpeed(-14);
+					hazard.GetComponent<RandomRotator>().setTumble(14);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_4_5 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Half way through !!";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel5();
+		}
+	}
+	
+	//************* Code for Level 5 Gameplay *************//
 	
 	public void startLevel5() {
 		level = 5;
 		player.GetComponent<PlayerComponent>().setFireRate(0.13f);
-		hazard.GetComponent<DestroyByContact>().setScoreValue(30);
-		hazard.GetComponent<Mover>().setSpeed(-17);
-		hazard.GetComponent<RandomRotator>().setTumble(17);
-		startGame();
+		if (!levelJump) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(30);
+					hazard.GetComponent<Mover>().setSpeed(-17);
+					hazard.GetComponent<RandomRotator>().setTumble(17);
+				}
+		startGame5();
 	}
+	
+	public void startGame5() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves5 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves5 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 5";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(30);
+					hazard.GetComponent<Mover>().setSpeed(-17);
+					hazard.GetComponent<RandomRotator>().setTumble(17);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_5_6 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Time to show \nyour manoeuvring skills";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			StartCoroutine (SpawnHorizontalWaves2 ());
+		}
+	}
+	
+	IEnumerator SpawnHorizontalWaves2 ()
+	{
+		yield return new WaitForSeconds (horizontalWaveWait);
+		levelUpText.SetActive(false);
+		for (int i = 0; i < 3*rightHazardCount; i++)
+		{
+			if (gameOver) break;
+			Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (0, 12));
+			Quaternion spawnRotation = Quaternion.identity;
+			Instantiate (hazardRight, spawnPosition, spawnRotation);
+			if (i%2==0) {
+				hazardRight.GetComponent<MoveHorizontal>().setSpeed(-10,-4);
+			} else {
+				hazardRight.GetComponent<MoveHorizontal>().setSpeed(-5,-2);
+			}
+			yield return new WaitForSeconds (spawnWait);
+		}
+		if (gameOver)
+		{
+			//restartText.text = "Press 'R' for Restart";
+			if (score > highscore) {
+				displayHighText.SetActive(true);
+				PlayerPrefs.SetInt ("highscore", score);
+			}
+			if (level > highestLevel) {
+				PlayerPrefs.SetInt ("highLevel", level);
+			}
+			restartButton.SetActive (true);
+			restart = true;
+		} else {
+			levelUpText.SetActive(true);
+			levelUpText.GetComponent<Text>().text = "Awesome job !";
+			startLevel6();
+		}
+	}
+	
+	//************* Code for Level 6 Gameplay *************//
 	
 	public void startLevel6() {
 		level = 6;
 		player.GetComponent<PlayerComponent>().setFireRate(0.10f);
-		hazard.GetComponent<DestroyByContact>().setScoreValue(35);
-		hazard.GetComponent<Mover>().setSpeed(-20);
-		hazard.GetComponent<RandomRotator>().setTumble(20);
-		startGame();
+		if (!levelJump) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(35);
+					hazard.GetComponent<Mover>().setSpeed(-20);
+					hazard.GetComponent<RandomRotator>().setTumble(20);
+				}
+		startGame6();
 	}
+	
+	public void startGame6() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves6 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves6 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 6";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(35);
+					hazard.GetComponent<Mover>().setSpeed(-20);
+					hazard.GetComponent<RandomRotator>().setTumble(20);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_6_7 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Getting close :D";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel7();
+		}
+	}
+	
+	//************* Code for Level 7 Gameplay *************//
 	
 	public void startLevel7() {
 		level = 7;
 		player.GetComponent<PlayerComponent>().setFireRate(0.07f);
-		hazard.GetComponent<DestroyByContact>().setScoreValue(40);
-		hazard.GetComponent<Mover>().setSpeed(-25);
-		hazard.GetComponent<RandomRotator>().setTumble(25);
-		startGame();
+		if (!levelJump) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(40);
+					hazard.GetComponent<Mover>().setSpeed(-25);
+					hazard.GetComponent<RandomRotator>().setTumble(25);
+				}
+		startGame7();
 	}
+	
+	public void startGame7() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves7 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves7 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 7";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(40);
+					hazard.GetComponent<Mover>().setSpeed(-25);
+					hazard.GetComponent<RandomRotator>().setTumble(25);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_7_8 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Things are \nabout to get hard !";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel8();
+		}
+	}
+	
+	//************* Code for Level 8 Gameplay *************//
 	
 	public void startLevel8() {
 		level = 8;
 		player.GetComponent<PlayerComponent>().setFireRate(0.04f);
-		hazard.GetComponent<DestroyByContact>().setScoreValue(45);
-		hazard.GetComponent<Mover>().setSpeed(-30);
-		hazard.GetComponent<RandomRotator>().setTumble(30);
-		startGame();
+		if (!levelJump) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(45);
+					hazard.GetComponent<Mover>().setSpeed(-30);
+					hazard.GetComponent<RandomRotator>().setTumble(30);
+				}
+		startGame8();
 	}
+	
+	public void startGame8() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves8 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves8 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 8";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(45);
+					hazard.GetComponent<Mover>().setSpeed(-30);
+					hazard.GetComponent<RandomRotator>().setTumble(30);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_8_9 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Almost there";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel9();
+		}
+	}
+	
+	//************* Code for Level 9 Gameplay *************//
 	
 	public void startLevel9() {
 		level = 9;
@@ -452,50 +919,50 @@ public class GameController : MonoBehaviour {
 	public void helpScreen() {
 		menuCanvas.SetActive(false);
 		helpCanvas.SetActive(true);
-        playerCanvas.SetActive(true);
+		playerCanvas.SetActive(true);
 		if (!isPaused) {
-            player.SetActive(true);
-        }
-        movementZone.SetActive(true);
-        fireZone.SetActive(true);
-        playInfo.SetActive(false);
-        pauseButton.SetActive(false);
-        var color = Color.grey;
-        color.a = 0.1f;
-        movementZone.GetComponent<Image>().color = color;
-        color = Color.red;
-        color.a = 0.1f;
-        fireZone.GetComponent<Image>().color = color;
-        if (isSwitched) {
-            if (isRightHand) {
-                if (everLeft) {
-                    GameObject.Find("Fire Zone Text").GetComponent<RectTransform>().localPosition += new Vector3(110,0,0);
-                    GameObject.Find("Movement Zone Text").GetComponent<RectTransform>().localPosition -= new Vector3(55,0,0);
-                }
-            } else {
-                GameObject.Find("Fire Zone Text").GetComponent<RectTransform>().localPosition -= new Vector3(110,0,0);
-                GameObject.Find("Movement Zone Text").GetComponent<RectTransform>().localPosition += new Vector3(55,0,0);
-                everLeft = true;
-            }
-        }
+			player.SetActive(true);
+		}
+		movementZone.SetActive(true);
+		fireZone.SetActive(true);
+		playInfo.SetActive(false);
+		pauseButton.SetActive(false);
+		var color = Color.grey;
+		color.a = 0.1f;
+		movementZone.GetComponent<Image>().color = color;
+		color = Color.red;
+		color.a = 0.1f;
+		fireZone.GetComponent<Image>().color = color;
+		if (isSwitched) {
+			if (isRightHand) {
+				if (everLeft) {
+					GameObject.Find("Fire Zone Text").GetComponent<RectTransform>().localPosition += new Vector3(110,0,0);
+					GameObject.Find("Movement Zone Text").GetComponent<RectTransform>().localPosition -= new Vector3(55,0,0);
+				}
+			} else {
+				GameObject.Find("Fire Zone Text").GetComponent<RectTransform>().localPosition -= new Vector3(110,0,0);
+				GameObject.Find("Movement Zone Text").GetComponent<RectTransform>().localPosition += new Vector3(55,0,0);
+				everLeft = true;
+			}
+		}
 	}
-    
-    public void backToMenu() {
+	
+	public void backToMenu() {
 		helpCanvas.SetActive(false);
 		player.SetActive(false);
 		menuCanvas.SetActive(true);
-        var color = Color.grey;
-        color.a = 0;
-        movementZone.GetComponent<Image>().color = color;
-        color = Color.red;
-        color.a = 0;
-        fireZone.GetComponent<Image>().color = color;
-        playInfo.SetActive(true);
-        pauseButton.SetActive(true);
-        playerCanvas.SetActive(false);
+		var color = Color.grey;
+		color.a = 0;
+		movementZone.GetComponent<Image>().color = color;
+		color = Color.red;
+		color.a = 0;
+		fireZone.GetComponent<Image>().color = color;
+		playInfo.SetActive(true);
+		pauseButton.SetActive(true);
+		playerCanvas.SetActive(false);
 	}
-    
-    //Setting screen functions
+	
+	//Setting screen functions
 	
 	public void settingsScreen() {
 		menuCanvas.SetActive(false);
@@ -504,50 +971,50 @@ public class GameController : MonoBehaviour {
 		if (playerSpeed == 0) playerSpeed = 7;
 		scrollBar.value = playerSpeed/20;
 		playerCanvas.SetActive(true);
-        if (!isPaused) {
-            player.SetActive(true);
-        }
-        movementZone.SetActive(true);
-        fireZone.SetActive(true);
-        pauseButton.SetActive(false);
-        playInfo.SetActive(false);
-        var color = Color.grey;
-        color.a = 0.1f;
-        movementZone.GetComponent<Image>().color = color;
-        color = Color.red;
-        color.a = 0.1f;
-        fireZone.GetComponent<Image>().color = color;
+		if (!isPaused) {
+			player.SetActive(true);
+		}
+		movementZone.SetActive(true);
+		fireZone.SetActive(true);
+		pauseButton.SetActive(false);
+		playInfo.SetActive(false);
+		var color = Color.grey;
+		color.a = 0.1f;
+		movementZone.GetComponent<Image>().color = color;
+		color = Color.red;
+		color.a = 0.1f;
+		fireZone.GetComponent<Image>().color = color;
 	}
 	
 	public void backToMenuFromSettings() {
 		settingsCanvas.SetActive(false);
 		player.SetActive(false);
 		menuCanvas.SetActive(true);
-        var color = Color.grey;
-        color.a = 0;
-        movementZone.GetComponent<Image>().color = color;
-        color = Color.red;
-        color.a = 0;
-        fireZone.GetComponent<Image>().color = color;
-        pauseButton.SetActive(true);
-        playInfo.SetActive(true);
-        playerCanvas.SetActive(false);
+		var color = Color.grey;
+		color.a = 0;
+		movementZone.GetComponent<Image>().color = color;
+		color = Color.red;
+		color.a = 0;
+		fireZone.GetComponent<Image>().color = color;
+		pauseButton.SetActive(true);
+		playInfo.SetActive(true);
+		playerCanvas.SetActive(false);
 	}
-    
-    public void switchSide() {
-        isSwitched = true;
-        if (isRightHand) {
-            movementZone.GetComponent<RectTransform>().localPosition += new Vector3(79.01f, 0, 0);
-            fireZone.GetComponent<RectTransform>().localPosition -= new Vector3(180,0,0);
-            isRightHand = false;
-            PlayerPrefs.SetInt ("playerSide",1);
-        } else {
-            movementZone.GetComponent<RectTransform>().localPosition -= new Vector3(79.01f, 0, 0);
-            fireZone.GetComponent<RectTransform>().localPosition += new Vector3(180,0,0);
-            isRightHand = true;
-            PlayerPrefs.SetInt ("playerSide",0);
-        }
-    }
+	
+	public void switchSide() {
+		isSwitched = true;
+		if (isRightHand) {
+			movementZone.GetComponent<RectTransform>().localPosition += new Vector3(79.01f, 0, 0);
+			fireZone.GetComponent<RectTransform>().localPosition -= new Vector3(180,0,0);
+			isRightHand = false;
+			PlayerPrefs.SetInt ("playerSide",1);
+		} else {
+			movementZone.GetComponent<RectTransform>().localPosition -= new Vector3(79.01f, 0, 0);
+			fireZone.GetComponent<RectTransform>().localPosition += new Vector3(180,0,0);
+			isRightHand = true;
+			PlayerPrefs.SetInt ("playerSide",0);
+		}
+	}
 	
 	public void backToMenuFromLevels() {
 		levelCanvas.SetActive(false);

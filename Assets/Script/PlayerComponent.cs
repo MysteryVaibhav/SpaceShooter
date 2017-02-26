@@ -67,7 +67,7 @@ public class PlayerComponent : NetworkBehaviour {
     }
     
     public void increaseFireRate(float val) {
-        fireRate -= val;
+        fireRate *= val;
     }
     
     public void setFireRate(float val) {

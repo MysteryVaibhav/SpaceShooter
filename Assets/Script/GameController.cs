@@ -188,12 +188,12 @@ public class GameController : MonoBehaviour {
 				yield return new WaitForSeconds (spawnWait);
 			}
 			// Level up logic
-			if (score - prevScore >= 500 && !gameOver) {
+			if (score - prevScore >= 5000 && !gameOver) {
 				prevScore = score;
 				hazard.GetComponent<DestroyByContact>().increaseScoreValue(5);
 				hazard.GetComponent<Mover>().increaseSpeed(-3);
 				hazard.GetComponent<RandomRotator>().increaseTumble(3);
-				player.GetComponent<PlayerComponent>().increaseFireRate(0.03f);
+				player.GetComponent<PlayerComponent>().increaseFireRate(0.95f);
 				levelUpText.SetActive(true);
 				level++;
 			}
@@ -225,10 +225,10 @@ public class GameController : MonoBehaviour {
 		level = 1;
 		player.GetComponent<PlayerComponent>().setFireRate(0.25f);
 		if (!levelJump) {
-					hazard.GetComponent<DestroyByContact>().setScoreValue(10);
-					hazard.GetComponent<Mover>().setSpeed(-5);
-					hazard.GetComponent<RandomRotator>().setTumble(5);
-				}
+			hazard.GetComponent<DestroyByContact>().setScoreValue(10);
+			hazard.GetComponent<Mover>().setSpeed(-5);
+			hazard.GetComponent<RandomRotator>().setTumble(5);
+		}
 		startGame1();
 	}
 	
@@ -297,12 +297,12 @@ public class GameController : MonoBehaviour {
 	
 	public void startLevel2() {
 		level = 2;
-		player.GetComponent<PlayerComponent>().setFireRate(0.22f);
+		player.GetComponent<PlayerComponent>().setFireRate(0.23f);
 		if (!levelJump) {
-					hazard.GetComponent<DestroyByContact>().setScoreValue(15);
-					hazard.GetComponent<Mover>().setSpeed(-8);
-					hazard.GetComponent<RandomRotator>().setTumble(8);
-				}
+			hazard.GetComponent<DestroyByContact>().setScoreValue(15);
+			hazard.GetComponent<Mover>().setSpeed(-8);
+			hazard.GetComponent<RandomRotator>().setTumble(8);
+		}
 		startGame2();
 	}
 	
@@ -377,7 +377,7 @@ public class GameController : MonoBehaviour {
 		for (int i = 0; i < rightHazardCount; i++)
 		{
 			if (gameOver) break;
-			Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (2, 16));
+			Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (0, 12));
 			Quaternion spawnRotation = Quaternion.identity;
 			Instantiate (hazardRight, spawnPosition, spawnRotation);
 			if (i == 0) {
@@ -409,12 +409,12 @@ public class GameController : MonoBehaviour {
 	
 	public void startLevel3() {
 		level = 3;
-		player.GetComponent<PlayerComponent>().setFireRate(0.19f);
+		player.GetComponent<PlayerComponent>().setFireRate(0.21f);
 		if (!levelJump) {
-					hazard.GetComponent<DestroyByContact>().setScoreValue(20);
-					hazard.GetComponent<Mover>().setSpeed(-11);
-					hazard.GetComponent<RandomRotator>().setTumble(11);
-				}
+			hazard.GetComponent<DestroyByContact>().setScoreValue(20);
+			hazard.GetComponent<Mover>().setSpeed(-11);
+			hazard.GetComponent<RandomRotator>().setTumble(11);
+		}
 		startGame3();
 	}
 	
@@ -486,12 +486,12 @@ public class GameController : MonoBehaviour {
 	
 	public void startLevel4() {
 		level = 4;
-		player.GetComponent<PlayerComponent>().setFireRate(0.16f);
+		player.GetComponent<PlayerComponent>().setFireRate(0.19f);
 		if (!levelJump) {
-					hazard.GetComponent<DestroyByContact>().setScoreValue(25);
-					hazard.GetComponent<Mover>().setSpeed(-14);
-					hazard.GetComponent<RandomRotator>().setTumble(14);
-				}
+			hazard.GetComponent<DestroyByContact>().setScoreValue(25);
+			hazard.GetComponent<Mover>().setSpeed(-14);
+			hazard.GetComponent<RandomRotator>().setTumble(14);
+		}
 		startGame4();
 	}
 	
@@ -563,12 +563,12 @@ public class GameController : MonoBehaviour {
 	
 	public void startLevel5() {
 		level = 5;
-		player.GetComponent<PlayerComponent>().setFireRate(0.13f);
+		player.GetComponent<PlayerComponent>().setFireRate(0.17f);
 		if (!levelJump) {
-					hazard.GetComponent<DestroyByContact>().setScoreValue(30);
-					hazard.GetComponent<Mover>().setSpeed(-17);
-					hazard.GetComponent<RandomRotator>().setTumble(17);
-				}
+			hazard.GetComponent<DestroyByContact>().setScoreValue(30);
+			hazard.GetComponent<Mover>().setSpeed(-17);
+			hazard.GetComponent<RandomRotator>().setTumble(17);
+		}
 		startGame5();
 	}
 	
@@ -676,12 +676,12 @@ public class GameController : MonoBehaviour {
 	
 	public void startLevel6() {
 		level = 6;
-		player.GetComponent<PlayerComponent>().setFireRate(0.10f);
+		player.GetComponent<PlayerComponent>().setFireRate(0.15f);
 		if (!levelJump) {
-					hazard.GetComponent<DestroyByContact>().setScoreValue(35);
-					hazard.GetComponent<Mover>().setSpeed(-20);
-					hazard.GetComponent<RandomRotator>().setTumble(20);
-				}
+			hazard.GetComponent<DestroyByContact>().setScoreValue(35);
+			hazard.GetComponent<Mover>().setSpeed(-20);
+			hazard.GetComponent<RandomRotator>().setTumble(20);
+		}
 		startGame6();
 	}
 	
@@ -753,12 +753,12 @@ public class GameController : MonoBehaviour {
 	
 	public void startLevel7() {
 		level = 7;
-		player.GetComponent<PlayerComponent>().setFireRate(0.07f);
+		player.GetComponent<PlayerComponent>().setFireRate(0.13f);
 		if (!levelJump) {
-					hazard.GetComponent<DestroyByContact>().setScoreValue(40);
-					hazard.GetComponent<Mover>().setSpeed(-25);
-					hazard.GetComponent<RandomRotator>().setTumble(25);
-				}
+			hazard.GetComponent<DestroyByContact>().setScoreValue(40);
+			hazard.GetComponent<Mover>().setSpeed(-25);
+			hazard.GetComponent<RandomRotator>().setTumble(25);
+		}
 		startGame7();
 	}
 	
@@ -830,12 +830,12 @@ public class GameController : MonoBehaviour {
 	
 	public void startLevel8() {
 		level = 8;
-		player.GetComponent<PlayerComponent>().setFireRate(0.04f);
+		player.GetComponent<PlayerComponent>().setFireRate(0.11f);
 		if (!levelJump) {
-					hazard.GetComponent<DestroyByContact>().setScoreValue(45);
-					hazard.GetComponent<Mover>().setSpeed(-30);
-					hazard.GetComponent<RandomRotator>().setTumble(30);
-				}
+			hazard.GetComponent<DestroyByContact>().setScoreValue(45);
+			hazard.GetComponent<Mover>().setSpeed(-30);
+			hazard.GetComponent<RandomRotator>().setTumble(30);
+		}
 		startGame8();
 	}
 	
@@ -885,7 +885,7 @@ public class GameController : MonoBehaviour {
 			if (score - prevScore >= level_8_9 && !gameOver) {
 				prevScore = score;
 				levelUpText.SetActive(true);
-				levelUpText.GetComponent<Text>().text = "Almost there";
+				levelUpText.GetComponent<Text>().text = "The real deal o_O";
 				level++;
 				levelJump = true;
 				break;
@@ -899,6 +899,50 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		if (!gameOver) {
+			StartCoroutine (SpawnHorizontalWaves3 ());
+		}
+	}
+	
+	IEnumerator SpawnHorizontalWaves3 ()
+	{
+		yield return new WaitForSeconds (horizontalWaveWait);
+		levelUpText.SetActive(false);
+		for (int i = 0; i < 4*rightHazardCount; i++)
+		{
+			if (gameOver) break;
+			Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (0, 12));
+			Quaternion spawnRotation = Quaternion.identity;
+			Instantiate (hazardRight, spawnPosition, spawnRotation);
+			if (i%2==0) {
+				hazardRight.GetComponent<MoveHorizontal>().setSpeed(-10,-4);
+			} else {
+				hazardRight.GetComponent<MoveHorizontal>().setSpeed(-5,-2);
+			}
+			spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+			spawnRotation = Quaternion.identity;
+			Instantiate (hazard, spawnPosition, spawnRotation);
+			if (i==0) {
+				hazard.GetComponent<DestroyByContact>().setScoreValue(0);
+				hazard.GetComponent<Mover>().setSpeed(-20);
+				hazard.GetComponent<RandomRotator>().setTumble(30);
+			}
+			yield return new WaitForSeconds (spawnWait);
+		}
+		if (gameOver)
+		{
+			//restartText.text = "Press 'R' for Restart";
+			if (score > highscore) {
+				displayHighText.SetActive(true);
+				PlayerPrefs.SetInt ("highscore", score);
+			}
+			if (level > highestLevel) {
+				PlayerPrefs.SetInt ("highLevel", level);
+			}
+			restartButton.SetActive (true);
+			restart = true;
+		} else {
+			levelUpText.SetActive(true);
+			levelUpText.GetComponent<Text>().text = "Respect _/\\_";
 			startLevel9();
 		}
 	}
@@ -907,7 +951,7 @@ public class GameController : MonoBehaviour {
 	
 	public void startLevel9() {
 		level = 9;
-		player.GetComponent<PlayerComponent>().setFireRate(0.01f);
+		player.GetComponent<PlayerComponent>().setFireRate(0.09f);
 		hazard.GetComponent<DestroyByContact>().setScoreValue(50);
 		hazard.GetComponent<Mover>().setSpeed(-35);
 		hazard.GetComponent<RandomRotator>().setTumble(35);

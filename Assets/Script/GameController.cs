@@ -88,7 +88,16 @@ public class GameController : MonoBehaviour {
 	private static int level_6_7 = 1200;
 	private static int level_7_8 = 1500;
 	private static int level_8_9 = 2000;
-	
+	private static int level_9_10 = 2700;
+	private static int level_10_11 = 400;
+	private static int level_11_12 = 560;
+	private static int level_12_13 = 740;
+	private static int level_13_14 = 940;
+	private static int level_14_15 = 1160;
+	private static int level_15_16 = 1400;
+	private static int level_16_17 = 1650;
+	private static int level_17_18 = 1950;
+	private static int level_18_19 = 2300;
 
 	void Start ()
 	{
@@ -140,6 +149,10 @@ public class GameController : MonoBehaviour {
 				lvl.GetComponent<Button>().interactable = true;
 			}
 		}
+	}
+	
+	public void musicOnOff() {
+		AudioListener.volume = 1 - AudioListener.volume;
 	}
 	
 	//Level related settings
@@ -220,7 +233,7 @@ public class GameController : MonoBehaviour {
 				yield return new WaitForSeconds (spawnWait);
 			}
 			// Level up logic
-			if (score - prevScore >= 5000 && !gameOver) {
+			if (score - prevScore >= 20000 && !gameOver) {
 				prevScore = score;
 				hazard.GetComponent<DestroyByContact>().increaseScoreValue(5);
 				hazard.GetComponent<Mover>().increaseSpeed(-3);
@@ -990,10 +1003,1046 @@ public class GameController : MonoBehaviour {
 	public void startLevel9() {
 		level = 9;
 		player.GetComponent<PlayerComponent>().setFireRate(0.09f);
-		hazard.GetComponent<DestroyByContact>().setScoreValue(50);
-		hazard.GetComponent<Mover>().setSpeed(-35);
-		hazard.GetComponent<RandomRotator>().setTumble(35);
-		startGame();
+		if (!levelJump) {
+			hazard.GetComponent<DestroyByContact>().setScoreValue(50);
+			hazard.GetComponent<Mover>().setSpeed(-35);
+			hazard.GetComponent<RandomRotator>().setTumble(35);
+		}
+		startGame9();
+	}
+	
+	public void startGame9() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves9 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves9 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 9";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(50);
+					hazard.GetComponent<Mover>().setSpeed(-35);
+					hazard.GetComponent<RandomRotator>().setTumble(35);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_9_10 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Going to the next page.";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel10();
+		}
+	}
+	
+	//************* Code for Level 10 Gameplay *************//
+
+	public void startLevel10() {
+		level = 10;
+		player.GetComponent<PlayerComponent>().setFireRate(0.25f);
+		if (!levelJump) {
+			hazard.GetComponent<DestroyByContact>().setScoreValue(60);
+			hazard.GetComponent<Mover>().setSpeed(-5);
+			hazard.GetComponent<RandomRotator>().setTumble(5);
+		}
+		startGame10();
+	}
+	
+	public void startGame10() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves10 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves10 ()
+	{
+		gameOverText.text = "Level 10";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (0, 12));
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazardRight, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazardRight.GetComponent<DestroyByContact>().setScoreValue(30);
+				}
+				if (i%2==0) {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(-10,-4);
+				} else {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(-5,-2);
+				}
+				spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(60);
+					hazard.GetComponent<Mover>().setSpeed(-5);
+					hazard.GetComponent<RandomRotator>().setTumble(5);
+				}
+				if (i%2==0) {
+					hazard.GetComponent<Mover>().setSpeed(-5);
+				} else {
+					hazard.GetComponent<Mover>().setSpeed(-8);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_10_11 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Getting a hang of things now";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel11();
+		}
+	}
+	
+	 //************* Code for Level 11 Gameplay *************//
+
+	public void startLevel11() {
+		level = 11;
+		player.GetComponent<PlayerComponent>().setFireRate(0.25f);
+		if (!levelJump) {
+			hazard.GetComponent<DestroyByContact>().setScoreValue(65);
+			hazard.GetComponent<Mover>().setSpeed(-7);
+			hazard.GetComponent<RandomRotator>().setTumble(7);
+		}
+		startGame11();
+	}
+	
+	public void startGame11() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves11 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves11 ()
+	{
+		gameOverText.text = "Level 11";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (0, 12));
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazardRight, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazardRight.GetComponent<DestroyByContact>().setScoreValue(33);
+				}
+				if (i%2==0) {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(-10,-4);
+				} else {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(-6,-3);
+				}
+				spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(65);
+					hazard.GetComponent<Mover>().setSpeed(-5);
+					hazard.GetComponent<RandomRotator>().setTumble(5);
+				}
+				if (i%2==0) {
+					hazard.GetComponent<Mover>().setSpeed(-5);
+				} else {
+					hazard.GetComponent<Mover>().setSpeed(-8);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_11_12 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Twist and turns to follow";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel12();
+		}
+	}
+	
+	//************* Code for Level 12 Gameplay *************//
+	
+	public void startLevel12() {
+		level = 12;
+		player.GetComponent<PlayerComponent>().setFireRate(0.23f);
+		if (!levelJump) {
+			hazard.GetComponent<DestroyByContact>().setScoreValue(70);
+			hazard.GetComponent<Mover>().setSpeed(-8);
+			hazard.GetComponent<RandomRotator>().setTumble(8);
+		}
+		startGame12();
+	}
+	
+	public void startGame12() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves12 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves12 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 12";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (0, 12));
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazardRight, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazardRight.GetComponent<DestroyByContact>().setScoreValue(35);
+				}
+				if (i%2==0) {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(-11,-5);
+				} else {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(-6,-3);
+				}
+				spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(70);
+					hazard.GetComponent<Mover>().setSpeed(-8);
+					hazard.GetComponent<RandomRotator>().setTumble(8);
+				}
+				if (i%2==0) {
+					hazard.GetComponent<Mover>().setSpeed(-8);
+				} else {
+					hazard.GetComponent<Mover>().setSpeed(-11);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_12_13 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Watch out for the waves";
+				//level++;
+				//levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			StartCoroutine (SpawnHorizontalWaves4 ());
+		}
+	}
+	
+	IEnumerator SpawnHorizontalWaves4 ()
+	{
+		yield return new WaitForSeconds (horizontalWaveWait);
+		levelUpText.SetActive(false);
+		for (int i = 0; i < rightHazardCount; i++)
+		{
+			if (gameOver) break;
+			Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (0, 12));
+			Quaternion spawnRotation = Quaternion.identity;
+			GameObject hr = Instantiate (hazardRight, spawnPosition, spawnRotation);
+			hr.GetComponent<MoveHorizontal>().setSpeed(-5,-2);
+			spawnPosition = new Vector3 (-8, 0, Random.Range (0, 12));
+			spawnRotation = Quaternion.identity;
+			GameObject hr1 =Instantiate (hazardRight, spawnPosition, spawnRotation);
+			hr1.GetComponent<MoveHorizontal>().setSpeed(8,-4);
+			yield return new WaitForSeconds (spawnWait);
+		}
+
+		if (gameOver)
+		{
+			//restartText.text = "Press 'R' for Restart";
+			if (score > highscore) {
+				displayHighText.SetActive(true);
+				PlayerPrefs.SetInt ("highscore", score);
+			}
+			if (level > highestLevel) {
+				PlayerPrefs.SetInt ("highLevel", level);
+			}
+			restartButton.SetActive (true);
+			restart = true;
+		} else {
+			levelUpText.SetActive(true);
+			levelUpText.GetComponent<Text>().text = "Niceee ;)";
+			level++;
+			levelJump = true;
+			startLevel13();
+		}
+	}
+	
+	//************* Code for Level 13 Gameplay *************//
+	
+	public void startLevel13() {
+		level = 13;
+		player.GetComponent<PlayerComponent>().setFireRate(0.21f);
+		if (!levelJump) {
+			hazard.GetComponent<DestroyByContact>().setScoreValue(80);
+			hazard.GetComponent<Mover>().setSpeed(-11);
+			hazard.GetComponent<RandomRotator>().setTumble(11);
+		}
+		startGame13();
+	}
+	
+	public void startGame13() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves13 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves13 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 13";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (-8, 0, Random.Range (0, 12));
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazardRight, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazardRight.GetComponent<DestroyByContact>().setScoreValue(40);
+				}
+				if (i%2==0) {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(12,-6);
+				} else {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(7,-4);
+				}
+				spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(80);
+					hazard.GetComponent<Mover>().setSpeed(-11);
+					hazard.GetComponent<RandomRotator>().setTumble(11);
+				}
+				if (i%2==0) {
+					hazard.GetComponent<Mover>().setSpeed(-11);
+				} else {
+					hazard.GetComponent<Mover>().setSpeed(-14);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_13_14 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Going Great !!";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel14();
+		}
+	}
+	
+	//************* Code for Level 14 Gameplay *************//
+	
+	public void startLevel14() {
+		level = 14;
+		player.GetComponent<PlayerComponent>().setFireRate(0.19f);
+		if (!levelJump) {
+			hazard.GetComponent<DestroyByContact>().setScoreValue(90);
+			hazard.GetComponent<Mover>().setSpeed(-14);
+			hazard.GetComponent<RandomRotator>().setTumble(14);
+		}
+		startGame14();
+	}
+	
+	public void startGame14() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves14 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves14 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 14";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (-8, 0, Random.Range (0, 12));
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazardRight, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazardRight.GetComponent<DestroyByContact>().setScoreValue(45);
+				}
+				if (i%2==0) {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(13,-7);
+				} else {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(8,-5);
+				}
+				spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(90);
+					hazard.GetComponent<Mover>().setSpeed(-14);
+					hazard.GetComponent<RandomRotator>().setTumble(14);
+				}
+				if (i%2==0) {
+					hazard.GetComponent<Mover>().setSpeed(-14);
+				} else {
+					hazard.GetComponent<Mover>().setSpeed(-17);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_14_15 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Half way through this !!";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel15();
+		}
+	}
+	
+	//************* Code for Level 15 Gameplay *************//
+	
+	public void startLevel15() {
+		level = 15;
+		player.GetComponent<PlayerComponent>().setFireRate(0.17f);
+		if (!levelJump) {
+			hazard.GetComponent<DestroyByContact>().setScoreValue(100);
+			hazard.GetComponent<Mover>().setSpeed(-17);
+			hazard.GetComponent<RandomRotator>().setTumble(17);
+		}
+		startGame15();
+	}
+	
+	public void startGame15() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves15 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves15 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 15";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (-8, 0, Random.Range (0, 12));
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazardRight, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazardRight.GetComponent<DestroyByContact>().setScoreValue(50);
+				}
+				if (i%2==0) {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(14,-8);
+				} else {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(9,-6);
+				}
+				spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(100);
+					hazard.GetComponent<Mover>().setSpeed(-17);
+					hazard.GetComponent<RandomRotator>().setTumble(17);
+				}
+				if (i%2==0) {
+					hazard.GetComponent<Mover>().setSpeed(-17);
+				} else {
+					hazard.GetComponent<Mover>().setSpeed(-20);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_15_16 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Show time";
+				//level++;
+				//levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			StartCoroutine (SpawnHorizontalWaves5 ());
+		}
+	}
+	
+	IEnumerator SpawnHorizontalWaves5 ()
+	{
+		yield return new WaitForSeconds (horizontalWaveWait);
+		levelUpText.SetActive(false);
+		for (int i = 0; i < 3*rightHazardCount; i++)
+		{
+			if (gameOver) break;
+			Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (0, 12));
+			Quaternion spawnRotation = Quaternion.identity;
+			GameObject hr = Instantiate (hazardRight, spawnPosition, spawnRotation);
+			if (i%2==0) {
+				hr.GetComponent<MoveHorizontal>().setSpeed(-10,-4);
+			} else {
+				hr.GetComponent<MoveHorizontal>().setSpeed(-5,-2);
+			}
+			spawnPosition = new Vector3 (-8, 0, Random.Range (0, 12));
+			spawnRotation = Quaternion.identity;
+			hr = Instantiate (hazardRight, spawnPosition, spawnRotation);
+			if (i%2==0) {
+				hr.GetComponent<MoveHorizontal>().setSpeed(10,-4);
+			} else {
+				hr.GetComponent<MoveHorizontal>().setSpeed(5,-2);
+			}
+			yield return new WaitForSeconds (spawnWait);
+		}
+		if (gameOver)
+		{
+			//restartText.text = "Press 'R' for Restart";
+			if (score > highscore) {
+				displayHighText.SetActive(true);
+				PlayerPrefs.SetInt ("highscore", score);
+			}
+			if (level > highestLevel) {
+				PlayerPrefs.SetInt ("highLevel", level);
+			}
+			restartButton.SetActive (true);
+			restart = true;
+		} else {
+			levelUpText.SetActive(true);
+			levelUpText.GetComponent<Text>().text = "Awesomenesss !";
+			level++;
+			levelJump = true;
+			startLevel16();
+		}
+	}
+	
+	//************* Code for Level 16 Gameplay *************//
+	
+	public void startLevel16() {
+		level = 16;
+		player.GetComponent<PlayerComponent>().setFireRate(0.15f);
+		if (!levelJump) {
+			hazard.GetComponent<DestroyByContact>().setScoreValue(110);
+			hazard.GetComponent<Mover>().setSpeed(-20);
+			hazard.GetComponent<RandomRotator>().setTumble(20);
+		}
+		startGame16();
+	}
+	
+	public void startGame16() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves16 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves16 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 16";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (-8, 0, Random.Range (0, 12));
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazardRight, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazardRight.GetComponent<DestroyByContact>().setScoreValue(55);
+				}
+				if (i%2==0) {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(15,-9);
+				} else {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(10,-7);
+				}
+				spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(110);
+					hazard.GetComponent<Mover>().setSpeed(-20);
+					hazard.GetComponent<RandomRotator>().setTumble(20);
+				}
+				if (i%2==0) {
+					hazard.GetComponent<Mover>().setSpeed(-20);
+				} else {
+					hazard.GetComponent<Mover>().setSpeed(-23);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_16_17 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Getting closer :D";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel17();
+		}
+	}
+	
+	//************* Code for Level 17 Gameplay *************//
+	
+	public void startLevel17() {
+		level = 17;
+		player.GetComponent<PlayerComponent>().setFireRate(0.13f);
+		if (!levelJump) {
+			hazard.GetComponent<DestroyByContact>().setScoreValue(120);
+			hazard.GetComponent<Mover>().setSpeed(-25);
+			hazard.GetComponent<RandomRotator>().setTumble(25);
+		}
+		startGame17();
+	}
+	
+	public void startGame17() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves17 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves17 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 17";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (-8, 0, Random.Range (0, 12));
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazardRight, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazardRight.GetComponent<DestroyByContact>().setScoreValue(60);
+				}
+				if (i%2==0) {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(16,-10);
+				} else {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(11,-8);
+				}
+				spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(120);
+					hazard.GetComponent<Mover>().setSpeed(-25);
+					hazard.GetComponent<RandomRotator>().setTumble(25);
+				}
+				if (i%2==0) {
+					hazard.GetComponent<Mover>().setSpeed(-25);
+				} else {
+					hazard.GetComponent<Mover>().setSpeed(-28);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_17_18 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "Penultimate level !";
+				level++;
+				levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			startLevel8();
+		}
+	}
+	
+	//************* Code for Level 18 Gameplay *************//
+	
+	public void startLevel18() {
+		level = 18;
+		player.GetComponent<PlayerComponent>().setFireRate(0.11f);
+		if (!levelJump) {
+			hazard.GetComponent<DestroyByContact>().setScoreValue(130);
+			hazard.GetComponent<Mover>().setSpeed(-30);
+			hazard.GetComponent<RandomRotator>().setTumble(30);
+		}
+		startGame18();
+	}
+	
+	public void startGame18() {
+		if (isPaused) {
+			Time.timeScale = 1;
+			menuCanvas.SetActive(false);
+			player.SetActive(true);
+		} else {
+			levelCanvas.SetActive(false);
+			restartButton.SetActive (false);
+			displayHighText.SetActive(false);
+			levelUpText.SetActive(false);
+			playerCanvas.SetActive(true);
+			player.SetActive(true);
+			if (playerSpeed == 0) playerSpeed = 7;
+			player.GetComponent<PlayerComponent>().setSpeed(playerSpeed);
+			StartCoroutine (SpawnWaves18 ());
+		}
+	}
+	
+	IEnumerator SpawnWaves18 ()
+	{
+		if (levelJump) {
+			levelUpText.SetActive(true);
+		}
+		gameOverText.text = "Level 18";
+		yield return new WaitForSeconds (startWait);
+		while (true)
+		{
+			gameOverText.text = "";
+			levelUpText.SetActive(false);
+			for (int i = 0; i < hazardCount; i++)
+			{
+				if (gameOver) break;
+				Vector3 spawnPosition = new Vector3 (-8, 0, Random.Range (0, 12));
+				Quaternion spawnRotation = Quaternion.identity;
+				Instantiate (hazardRight, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazardRight.GetComponent<DestroyByContact>().setScoreValue(65);
+				}
+				if (i%2==0) {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(17,-11);
+				} else {
+					hazardRight.GetComponent<MoveHorizontal>().setSpeed(12,-9);
+				}
+				spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+				spawnRotation = Quaternion.identity;
+				Instantiate (hazard, spawnPosition, spawnRotation);
+				if (i==0) {
+					hazard.GetComponent<DestroyByContact>().setScoreValue(130);
+					hazard.GetComponent<Mover>().setSpeed(-30);
+					hazard.GetComponent<RandomRotator>().setTumble(30);
+				}
+				if (i%2==0) {
+					hazard.GetComponent<Mover>().setSpeed(-30);
+				} else {
+					hazard.GetComponent<Mover>().setSpeed(-33);
+				}
+				yield return new WaitForSeconds (spawnWait);
+			}
+			// Level up logic
+			if (score - prevScore >= level_18_19 && !gameOver) {
+				prevScore = score;
+				levelUpText.SetActive(true);
+				levelUpText.GetComponent<Text>().text = "The ultimate fight";
+				//level++;
+				//levelJump = true;
+				break;
+			}
+			//yield return new WaitForSeconds (waveWait);
+
+			if (gameOver)
+			{
+				gameOverAction();
+				break;
+			}
+		}
+		if (!gameOver) {
+			StartCoroutine (SpawnHorizontalWaves6 ());
+		}
+	}
+	
+	IEnumerator SpawnHorizontalWaves6 ()
+	{
+		yield return new WaitForSeconds (horizontalWaveWait);
+		levelUpText.SetActive(false);
+		for (int i = 0; i < 4*rightHazardCount; i++)
+		{
+			if (gameOver) break;
+			Vector3 spawnPosition = new Vector3 (8, 0, Random.Range (0, 12));
+			Quaternion spawnRotation = Quaternion.identity;
+			GameObject hr = Instantiate (hazardRight, spawnPosition, spawnRotation);
+			if (i%2==0) {
+				hr.GetComponent<MoveHorizontal>().setSpeed(-10,-4);
+			} else {
+				hr.GetComponent<MoveHorizontal>().setSpeed(-5,-2);
+			}
+			spawnPosition = new Vector3 (-8, 0, Random.Range (0, 12));
+			spawnRotation = Quaternion.identity;
+			hr = Instantiate (hazardRight, spawnPosition, spawnRotation);
+			if (i%2==0) {
+				hr.GetComponent<MoveHorizontal>().setSpeed(10,-4);
+			} else {
+				hr.GetComponent<MoveHorizontal>().setSpeed(5,-2);
+			}
+			spawnPosition = new Vector3 (Random.Range (-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+			spawnRotation = Quaternion.identity;
+			Instantiate (hazard, spawnPosition, spawnRotation);
+			if (i==0) {
+				hazard.GetComponent<DestroyByContact>().setScoreValue(0);
+				hazard.GetComponent<Mover>().setSpeed(-20);
+				hazard.GetComponent<RandomRotator>().setTumble(30);
+			}
+			yield return new WaitForSeconds (spawnWait);
+		}
+		if (gameOver)
+		{
+			//restartText.text = "Press 'R' for Restart";
+			if (score > highscore) {
+				displayHighText.SetActive(true);
+				PlayerPrefs.SetInt ("highscore", score);
+			}
+			if (level > highestLevel) {
+				PlayerPrefs.SetInt ("highLevel", level);
+			}
+			restartButton.SetActive (true);
+			restart = true;
+		} else {
+			levelUpText.SetActive(true);
+			levelUpText.GetComponent<Text>().text = "You are the champion !!\nGoing to level 1 now";
+			level++;
+			levelJump = true;
+			startLevel1();
+		}
 	}
 	
 	//************* Button onclick functions **************//

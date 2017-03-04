@@ -70,6 +70,10 @@ public class GameController : MonoBehaviour {
 	//Level Canvas
 	public GameObject levelBackButton;
 	public GameObject levelCanvas;
+    
+    //First Time Canvas
+    public GameObject firstTimeGame;
+    public GameObject continueButton;
 	
 	//Level Thresholds
 	private static int level_1_2 = 250;
@@ -106,6 +110,12 @@ public class GameController : MonoBehaviour {
 		playerSpeed = PlayerPrefs.GetFloat("playerSpeed");
 		highScoreText.text = "Highest Score : " + highscore;
 		//restartButton.SetActive (false);
+        if (highscore == 0) {
+            menuCanvas.SetActive(false);
+            firstTimeGame.SetActive(true);
+        } else {
+            firstTimeGame.SetActive(false);
+        }
 		gameOverText.text = "";
 		fireZoneIndicatorText.text = "Tap \nthis \nto \nFire";
 		movementZoneIndicatorText.text = "Track Pad \n\nTouch and drag\n to move player";
@@ -353,8 +363,8 @@ public class GameController : MonoBehaviour {
 				prevScore = score;
 				levelUpText.SetActive(true);
 				levelUpText.GetComponent<Text>().text = "Watch out for the waves ;)";
-				level++;
-				levelJump = true;
+				//level++;
+				//levelJump = true;
 				break;
 			}
 			//yield return new WaitForSeconds (waveWait);
@@ -401,6 +411,8 @@ public class GameController : MonoBehaviour {
 		} else {
 			levelUpText.SetActive(true);
 			levelUpText.GetComponent<Text>().text = "You have got skills.";
+            level++;
+            levelJump = true;
 			startLevel3();
 		}
 	}
@@ -619,8 +631,8 @@ public class GameController : MonoBehaviour {
 				prevScore = score;
 				levelUpText.SetActive(true);
 				levelUpText.GetComponent<Text>().text = "Time to show \nyour manoeuvring skills";
-				level++;
-				levelJump = true;
+				//level++;
+				//levelJump = true;
 				break;
 			}
 			//yield return new WaitForSeconds (waveWait);
@@ -668,6 +680,8 @@ public class GameController : MonoBehaviour {
 		} else {
 			levelUpText.SetActive(true);
 			levelUpText.GetComponent<Text>().text = "Awesome job !";
+            level++;
+            levelJump = true;
 			startLevel6();
 		}
 	}
@@ -886,8 +900,8 @@ public class GameController : MonoBehaviour {
 				prevScore = score;
 				levelUpText.SetActive(true);
 				levelUpText.GetComponent<Text>().text = "The real deal o_O";
-				level++;
-				levelJump = true;
+				//level++;
+				//levelJump = true;
 				break;
 			}
 			//yield return new WaitForSeconds (waveWait);
@@ -943,6 +957,8 @@ public class GameController : MonoBehaviour {
 		} else {
 			levelUpText.SetActive(true);
 			levelUpText.GetComponent<Text>().text = "Respect _/\\_";
+            level++;
+            levelJump = true;
 			startLevel9();
 		}
 	}
@@ -957,6 +973,8 @@ public class GameController : MonoBehaviour {
 		hazard.GetComponent<RandomRotator>().setTumble(35);
 		startGame();
 	}
+    
+    //************* Button onclick functions **************//
 	
 	//Help screen functions
 	
@@ -1064,6 +1082,11 @@ public class GameController : MonoBehaviour {
 		levelCanvas.SetActive(false);
 		menuCanvas.SetActive(true);
 	}
+    
+    public void continueToMainMenu() {
+		firstTimeGame.SetActive(false);
+		menuCanvas.SetActive(true);
+	}
 	
 	public void pauseGame() {
 		Time.timeScale = 0;
@@ -1071,19 +1094,6 @@ public class GameController : MonoBehaviour {
 		player.SetActive(false);
 		menuCanvas.SetActive(true);
 	}
-
-	//void Update ()
-	//{
-//		if (restart)
-//		{
-		//	if (Input.GetKeyDown (KeyCode.R))
-	//		{
-//				Application.LoadLevel (Application.loadedLevel);
-//			}
-//		}
-//	}
-
-
 
 	public void AddScore (int newScoreValue)
 	{

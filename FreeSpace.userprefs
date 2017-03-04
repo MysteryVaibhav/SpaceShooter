@@ -1,15 +1,15 @@
 ﻿<Properties StartupItem="FreeSpace.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\DestroyByTime.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\SimpleTouchPad.cs">
     <Files>
       <File FileName="Assets\Script\PlayerComponent.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\Mover.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\DestroyByBoundary.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\RandomRotator.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\DestroyByContact.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\GameController.cs" Line="3" Column="21" />
+      <File FileName="Assets\Script\GameController.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\DestroyByTime.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\SimpleTouchPad.cs" Line="1" Column="1" />
+      <File FileName="Assets\Script\SimpleTouchPad.cs" Line="32" Column="1" />
       <File FileName="Assets\Script\SimpleTouchAreaButton.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>

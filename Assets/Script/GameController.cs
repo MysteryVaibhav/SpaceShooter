@@ -70,10 +70,14 @@ public class GameController : MonoBehaviour {
 	//Level Canvas
 	public GameObject levelBackButton;
 	public GameObject levelCanvas;
-    
-    //First Time Canvas
-    public GameObject firstTimeGame;
-    public GameObject continueButton;
+	public GameObject level_1_9;
+	public GameObject level_10_18;
+	public GameObject level_back;
+	public GameObject level_forward;
+	
+	//First Time Canvas
+	public GameObject firstTimeGame;
+	public GameObject continueButton;
 	
 	//Level Thresholds
 	private static int level_1_2 = 250;
@@ -110,12 +114,12 @@ public class GameController : MonoBehaviour {
 		playerSpeed = PlayerPrefs.GetFloat("playerSpeed");
 		highScoreText.text = "Highest Score : " + highscore;
 		//restartButton.SetActive (false);
-        if (highscore == 0) {
-            menuCanvas.SetActive(false);
-            firstTimeGame.SetActive(true);
-        } else {
-            firstTimeGame.SetActive(false);
-        }
+		if (highscore == 0) {
+			menuCanvas.SetActive(false);
+			firstTimeGame.SetActive(true);
+		} else {
+			firstTimeGame.SetActive(false);
+		}
 		gameOverText.text = "";
 		fireZoneIndicatorText.text = "Tap \nthis \nto \nFire";
 		movementZoneIndicatorText.text = "Track Pad \n\nTouch and drag\n to move player";
@@ -145,7 +149,25 @@ public class GameController : MonoBehaviour {
 		} else {
 			menuCanvas.SetActive(false);
 			levelCanvas.SetActive(true);
+			level_1_9.SetActive(true);
+			level_10_18.SetActive(false);
+			level_back.GetComponent<Button>().interactable = false;
+			level_forward.GetComponent<Button>().interactable = true;
 		}
+	}
+	
+	public void onLevelForward() {
+		level_1_9.SetActive(false);
+		level_10_18.SetActive(true);
+		level_back.GetComponent<Button>().interactable = true;
+		level_forward.GetComponent<Button>().interactable = false;
+	}
+	
+	public void onLevelBack() {
+		level_1_9.SetActive(true);
+		level_10_18.SetActive(false);
+		level_back.GetComponent<Button>().interactable = false;
+		level_forward.GetComponent<Button>().interactable = true;
 	}
 	
 	void gameOverAction() {
@@ -411,8 +433,8 @@ public class GameController : MonoBehaviour {
 		} else {
 			levelUpText.SetActive(true);
 			levelUpText.GetComponent<Text>().text = "You have got skills.";
-            level++;
-            levelJump = true;
+			level++;
+			levelJump = true;
 			startLevel3();
 		}
 	}
@@ -680,8 +702,8 @@ public class GameController : MonoBehaviour {
 		} else {
 			levelUpText.SetActive(true);
 			levelUpText.GetComponent<Text>().text = "Awesome job !";
-            level++;
-            levelJump = true;
+			level++;
+			levelJump = true;
 			startLevel6();
 		}
 	}
@@ -957,8 +979,8 @@ public class GameController : MonoBehaviour {
 		} else {
 			levelUpText.SetActive(true);
 			levelUpText.GetComponent<Text>().text = "Respect _/\\_";
-            level++;
-            levelJump = true;
+			level++;
+			levelJump = true;
 			startLevel9();
 		}
 	}
@@ -973,8 +995,8 @@ public class GameController : MonoBehaviour {
 		hazard.GetComponent<RandomRotator>().setTumble(35);
 		startGame();
 	}
-    
-    //************* Button onclick functions **************//
+	
+	//************* Button onclick functions **************//
 	
 	//Help screen functions
 	
@@ -1082,8 +1104,8 @@ public class GameController : MonoBehaviour {
 		levelCanvas.SetActive(false);
 		menuCanvas.SetActive(true);
 	}
-    
-    public void continueToMainMenu() {
+	
+	public void continueToMainMenu() {
 		firstTimeGame.SetActive(false);
 		menuCanvas.SetActive(true);
 	}
